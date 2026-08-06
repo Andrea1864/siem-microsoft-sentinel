@@ -1,1 +1,13 @@
 
+// Rule: TechPay - Multiple Failed Login Attempts
+// Tactic: Credential Access
+// Severity: High
+// Description: Detects more than 5 failed login attempts 
+// from the same IP in 10 minutes - possible brute force attack
+
+SigninLogs
+| where ResultType != "0"
+| where TimeGenerated > ago(10m)
+| summarize FailedAttempts = count() by IPAddress, UserPrincipalName
+| where FailedAttempts > 5
+| project TimeGenerated = now(), IPAddress, UserPrincipalName, FailedAttempts
