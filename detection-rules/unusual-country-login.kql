@@ -1,1 +1,11 @@
+// Rule: TechPay - Login from Unusual Country
+// Tactic: Initial Access
+// Severity: Medium
+// Description: Detects logins from countries outside Spain 
+// and EU - possible account takeover
 
+SigninLogs
+| where ResultType == "0"
+| where Location !in ("ES", "FR", "DE", "IT", "PT", "NL")
+| project TimeGenerated, UserPrincipalName, Location, 
+  IPAddress, AppDisplayName
