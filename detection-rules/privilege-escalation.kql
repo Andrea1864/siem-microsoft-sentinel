@@ -1,1 +1,13 @@
+// Rule: TechPay - Privileged Role Assignment
+// Tactic: Privilege Escalation
+// Severity: High
+// Description: Detects when a user is assigned a privileged 
+// role - possible privilege escalation or insider threat
 
+AuditLogs
+| where OperationName == "Add member to role"
+| where Result == "success"
+| extend TargetUser = tostring(TargetResources[0].userPrincipalName)
+| extend AssignedRole = tostring(TargetResources[0].displayName)
+| project TimeGenerated, TargetUser, AssignedRole, 
+  InitiatedBy = tostring(InitiatedBy.user.userPrincipalName)
