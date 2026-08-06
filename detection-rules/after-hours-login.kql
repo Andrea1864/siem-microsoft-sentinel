@@ -1,1 +1,12 @@
+// Rule: TechPay - Login Outside Business Hours
+// Tactic: Initial Access
+// Severity: Medium
+// Description: Detects logins outside business hours 
+// (before 7am or after 9pm) - possible unauthorized access
 
+SigninLogs
+| where ResultType == "0"
+| extend HourOfDay = datetime_part("hour", TimeGenerated)
+| where HourOfDay < 7 or HourOfDay > 21
+| project TimeGenerated, UserPrincipalName, IPAddress, 
+  Location, AppDisplayName, HourOfDay
